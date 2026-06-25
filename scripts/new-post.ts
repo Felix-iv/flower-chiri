@@ -37,6 +37,10 @@ mkdirSync(dirname(fullPath), { recursive: true })
 const content: string = `---
 title: ${displayTitle}
 pubDate: '${new Date().toISOString().split('T')[0]}'
+description: ''
+category: ''
+tags:
+  - ''
 ---
 
 `

@@ -1,0 +1,49 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+import { getSortedFilteredPosts } from '@/utils/draft'
+import { getTagCounts, slugifyTaxonomy } from '@/utils/posts'
+
+const posts = await getSortedFilteredPosts()
+const tags = getTagCounts(posts)
+---
+
+<IndexLayout title={`Tags · ${themeConfig.site.title}`} description={themeConfig.site.description}>
+  <main class="tag-page">
+    <ul>
+      {tags.map(([tag, count]) => (
+        <li>
+          <a href={`/tags/${slugifyTaxonomy(tag)}/`}>
+            {tag} <span>{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</IndexLayout>
+
+<style>
+  .tag-page ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 1.4rem;
+  }
+
+  .tag-page a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .tag-page a:hover {
+    text-decoration: underline;
+  }
+
+  .tag-page span {
+    color: var(--text-secondary);
+    font-size: var(--font-size-s);
+    vertical-align: super;
+  }
+</style>

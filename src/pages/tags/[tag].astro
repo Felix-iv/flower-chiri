@@ -1,0 +1,34 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import PostList from '@/components/widgets/PostList.astro'
+import { themeConfig } from '@/config'
+import { getSortedFilteredPosts } from '@/utils/draft'
+import { getTagCounts, sortPosts, slugifyTaxonomy } from '@/utils/posts'
+
+export async function getStaticPaths() {
+  const posts = await getSortedFilteredPosts()
+
+  return getTagCounts(posts).map(([tag]) => ({
+    params: { tag: slugifyTaxonomy(tag) },
+    props: { tag }
+  }))
+}
+
+const { tag } = Astro.props
+const posts = await getSortedFilteredPosts()
+const tagPosts = sortPosts(posts.filter((post) => post.data.tags.includes(tag)))
+---
+
+<IndexLayout title={`${tag} · ${themeConfig.site.title}`} description={themeConfig.site.description}>
+  <main class="taxonomy-detail">
+    <h1>{tag}</h1>
+    <PostList posts={tagPosts} />
+  </main>
+</IndexLayout>
+
+<style>
+  .taxonomy-detail h1 {
+    margin: 0 0 1rem;
+    font-size: 1.4rem;
+  }
+</style>

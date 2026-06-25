@@ -1,59 +1,127 @@
 ---
-import { themeConfig } from '@/config'
-const today = new Date()
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/Felix-iv', icon: 'github' },
+  { label: 'Weibo', href: 'https://weibo.com/u/7586312155', icon: 'weibo' },
+  { label: 'Email', href: 'mailto:flower4night@gmail.com', icon: 'email' }
+]
 ---
 
-<footer>
-  <div class="footer-content">
-    <div class="copyright">
-      <span class="date">
-        &copy;
-        {today.getFullYear()}
-      </span>
-      {themeConfig.site.author}
-    </div>
-    <div class="powered-by">
-      Powered by{' '}
-      <a href="https://astro.build">Astro</a> +{' '}
-      <a href="https://github.com/the3ash/astro-chiri">Chiri</a>
-    </div>
-  </div>
+<footer class="site-footer">
+  <nav class="social-links" aria-label="Social links">
+    {
+      socialLinks.map((link) => (
+        <a
+          class="social-link"
+          href={link.href}
+          aria-label={link.label}
+          title={link.label}
+          target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+          rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+        >
+          {link.icon === 'github' && (
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 2C6.48 2 2 6.58 2 12.26c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5v-1.75c-2.78.62-3.37-1.38-3.37-1.38-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.35 1.12 2.92.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.72 0 0 .85-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.92c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.64 1.03 2.76 0 3.95-2.34 4.82-4.57 5.08.36.32.68.95.68 1.92v2.85c0 .28.18.6.69.5A10.08 10.08 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"
+              />
+            </svg>
+          )}
+          {link.icon === 'weibo' && (
+            <span class="weibo-icon" aria-hidden="true">
+              <svg viewBox="0 0 1024 1024" preserveAspectRatio="xMidYMid meet">
+                <path
+                  fill="currentColor"
+                  d="M398.6 780.9c-162.5 0-294.2-80.9-294.2-180.8 0-52.3 36.2-99.4 94.1-132.4 26.5-15.1 61.2-32 72.8-38.6 19.5-11.2 30.3-26.6 30.3-43.7 0-8.7-2.8-17.9-8.7-27.4-15.8-25.4-8.2-58.4 17.1-74.2 25.1-15.7 58.5-7.9 74.2 17.4 24.3 39 47.7 20.2 47.7 20.2 45.6-19.2 96.4-30 149.9-30 162.5 0 294.2 80.9 294.2 180.8 0 99.8-131.7 308.7-477.4 308.7Zm45.5-337.8c-118.1 0-213.9 56.7-213.9 126.8 0 70 95.8 126.8 213.9 126.8 118.2 0 213.9-56.8 213.9-126.8 0-70.1-95.7-126.8-213.9-126.8Zm-73.4 194.1c-40.2 0-72.8-25.7-72.8-57.5s32.6-57.6 72.8-57.6 72.8 25.8 72.8 57.6-32.6 57.5-72.8 57.5Zm151.8-13.5c-26.3 0-47.6-17.2-47.6-38.4 0-21.3 21.3-38.5 47.6-38.5 26.4 0 47.7 17.2 47.7 38.5 0 21.2-21.3 38.4-47.7 38.4ZM821.8 360c-19.3 0-35-15.7-35-35 0-49.2-39.9-89.1-89.1-89.1-19.3 0-35-15.7-35-35s15.7-35 35-35c87.8 0 159.1 71.3 159.1 159.1 0 19.3-15.7 35-35 35Zm104.6 44.2c-19.3 0-35-15.7-35-35 0-125.9-102.1-228-228-228-19.3 0-35-15.7-35-35s15.7-35 35-35c164.5 0 298 133.5 298 298 0 19.3-15.7 35-35 35Z"
+                />
+              </svg>
+            </span>
+          )}
+          {link.icon === 'email' && (
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M4.5 5h15A2.5 2.5 0 0 1 22 7.5v9A2.5 2.5 0 0 1 19.5 19h-15A2.5 2.5 0 0 1 2 16.5v-9A2.5 2.5 0 0 1 4.5 5Zm0 2a.5.5 0 0 0-.5.5v.3l8 4.92 8-4.92v-.3a.5.5 0 0 0-.5-.5h-15ZM20 10.15l-7.48 4.6a1 1 0 0 1-1.04 0L4 10.15v6.35a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5v-6.35Z"
+              />
+            </svg>
+          )}
+          <span class="sr-only">{link.label}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <p class="copyright">
+    © 2026 by 亦如风过耳 | Powered by <a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> +
+    <a href="https://github.com/the3ash/astro-chiri" target="_blank" rel="noopener noreferrer">Chiri</a>
+  </p>
 </footer>
 <style>
-  footer {
+  .site-footer {
     font-size: var(--font-size-s);
     font-weight: var(--font-weight-light);
     line-height: 1.75;
     color: var(--text-secondary);
     opacity: 0.75;
-    margin-top: 4rem;
+    margin-top: 5rem;
+    text-align: center;
   }
 
-  .footer-content {
+  .social-links {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    gap: 0.95rem;
     width: 100%;
+    margin-bottom: 0.55rem;
   }
 
-  .copyright,
-  .powered-by {
-    white-space: nowrap;
+  .social-link {
+    width: 1.2rem;
+    height: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .copyright .date {
-    opacity: 1;
+  .social-link svg {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
-  footer a {
+  .weibo-icon {
+    width: 1.26rem;
+    height: 1.26rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .weibo-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    transform: translateY(0.02rem) scale(1.08);
+    transform-origin: center;
+  }
+
+  .copyright {
+    margin: 0;
+  }
+
+  .site-footer a {
     color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.2s ease-out;
   }
 
-  footer a:hover {
+  .site-footer a:hover {
     color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .site-footer {
+      margin-top: 3.5rem;
+    }
   }
 </style>

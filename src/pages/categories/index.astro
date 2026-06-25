@@ -1,0 +1,30 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+import { getSortedFilteredPosts } from '@/utils/draft'
+import { getCategoryCounts, slugifyTaxonomy } from '@/utils/posts'
+
+const posts = await getSortedFilteredPosts()
+const categories = getCategoryCounts(posts)
+---
+
+<IndexLayout title={`Categories · ${themeConfig.site.title}`} description={themeConfig.site.description}>
+  <main class="taxonomy-page">
+    <ul>
+      {categories.map(([category, count]) => (
+        <li>
+          <a href={`/categories/${slugifyTaxonomy(category)}/`}>
+            {category} <span>{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</IndexLayout>
+
+<style>
+  .taxonomy-page ul { list-style: disc; margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .taxonomy-page a { color: var(--text-primary); text-decoration: none; }
+  .taxonomy-page a:hover { text-decoration: underline; }
+  .taxonomy-page span { color: var(--text-secondary); font-size: var(--font-size-s); vertical-align: super; }
+</style>

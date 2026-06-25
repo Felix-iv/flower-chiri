@@ -1,0 +1,39 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+import { getSortedFilteredPosts } from '@/utils/draft'
+import { getPostUrl, groupPostsByYear } from '@/utils/posts'
+
+const posts = await getSortedFilteredPosts()
+const groupedPosts = groupPostsByYear(posts)
+---
+
+<IndexLayout title={`Archives · ${themeConfig.site.title}`} description={themeConfig.site.description}>
+  <main class="archive-page">
+    {Object.entries(groupedPosts).map(([year, yearPosts]) => (
+      <section class="archive-year">
+        <h1>{year}</h1>
+        <ul>
+          {yearPosts.map((post) => (
+            <li>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toISOString().slice(5, 10)}
+              </time>
+              <a href={getPostUrl(post)}>{post.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </main>
+</IndexLayout>
+
+<style>
+  .archive-page { gap: 2rem; }
+  .archive-year h1 { margin: 0 0 0.75rem; font-size: 1.6rem; }
+  .archive-year ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .archive-year li { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: 1rem; align-items: baseline; }
+  .archive-year time { color: var(--text-secondary); }
+  .archive-year a { color: var(--text-primary); text-decoration: none; }
+  .archive-year a:hover { text-decoration: underline; }
+</style>

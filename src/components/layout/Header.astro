@@ -1,28 +1,92 @@
 ---
 import { themeConfig } from '@/config'
-import ThemeToggle from '@/components/ui/ThemeToggle.astro'
+
+const currentPath = Astro.url.pathname
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/archives/', label: 'Archives' },
+  { href: '/categories/', label: 'Categories' },
+  { href: '/tags/', label: 'Tags' },
+  { href: '/about/', label: 'About' }
+]
+
+function isActive(href: string) {
+  return href === '/' ? currentPath === '/' : currentPath.startsWith(href)
+}
 ---
 
-<header>
-  <nav>
-    <a href="/">{themeConfig.site.title}</a>
-    {themeConfig.general.themeToggle && <ThemeToggle />}
+<header class="site-header">
+  <a class="brand" href="/" aria-label={themeConfig.site.title}>
+    <img class="avatar" src="/avatar.jpg" alt={themeConfig.site.author} />
+    <span>{themeConfig.site.title}</span>
+  </a>
+
+  <nav class="site-nav" aria-label="Main navigation">
+    {navItems.map((item) => (
+      <a class={isActive(item.href) ? 'active' : ''} href={item.href}>
+        {item.label}
+      </a>
+    ))}
   </nav>
 </header>
+
 <style>
-  header {
-    margin: 0;
-  }
-  nav {
+  .site-header {
+    margin: 0 0 3.5rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    gap: 1.5rem;
+    text-align: center;
   }
-  header a {
-    font-weight: var(--font-weight-bold);
+
+  .brand {
     color: var(--text-primary);
     text-decoration: none;
-    min-width: 3rem;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .avatar {
+    width: 6.5rem;
+    height: 6.5rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    display: block;
+  }
+
+  .site-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .site-nav a {
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-decoration: none;
+    position: relative;
+  }
+
+  .site-nav a:hover,
+  .site-nav a.active {
+    color: var(--text-primary);
+  }
+
+  .site-nav a.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.15rem;
+    height: 0.35rem;
+    background: rgba(79, 209, 197, 0.5);
+    z-index: -1;
   }
 </style>

@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content'
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+
+const aboutEntries = await getCollection('about')
+const aboutEntry =
+  aboutEntries.find((entry) => entry.id === 'about' || entry.id.endsWith('/about')) ?? aboutEntries[0]
+const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
+---
+
+<IndexLayout title={`About · ${themeConfig.site.title}`} description={themeConfig.site.description}>
+  <article class="about-page prose">
+    {Content ? <Content /> : <p>请在 src/content/about/about.md 中写入 About 内容。</p>}
+  </article>
+</IndexLayout>
+
+<style>
+  .about-page {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+</style>

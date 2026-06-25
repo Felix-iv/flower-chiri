@@ -2,15 +2,22 @@
 title: 'About'
 ---
 
-<!--
-This content will be displayed at the top of the index page.
-You can leave this empty if you don’t want to show any content.
--->
+你好，我是 yim。
 
-A static blog theme based on [Astro](https://astro.build), _designed for clarity and focus_.
+这里是我的个人博客，用来记录技术学习、工具折腾、读书笔记和一些日常想法。
 
-With a deliberately minimal design, this layout ensures your content takes center stage. It's built for flexibility, offering customization options that honor its clean and elegant aesthetic.
+我最近在学习 Linux、Nginx、反向代理、个人网站部署，以及如何把 AI chatbot 接入自己的博客。这个站点也是我边学边搭出来的。
 
-Effortlessly share your thoughts in a calm & dustless space.
+我喜欢简洁、安静、可长期维护的东西。希望这个博客能成为一个慢慢积累的地方。
 
-Check posts for details and view source on [GitHub](https://github.com/the3ash/astro-chiri).
+## 这个博客会写什么
+
+- 技术笔记
+- 部署记录
+- 工具使用
+- 读书摘录
+- 一些随笔
+
+## 联系
+
+如果以后想放邮箱、GitHub、Telegram 或其他链接，可以写在这里。
