@@ -17,6 +17,7 @@ pnpm-debug.log*
 # Environment variables
 .env
 .env.production
+.fastgpt-sync-state.json
 
 # macOS-specific files
 .DS_Store

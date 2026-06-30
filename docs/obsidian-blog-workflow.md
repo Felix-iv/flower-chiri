@@ -122,6 +122,72 @@ sync_fastgpt: false
 
 FastGPT 还没接入前，`sync_fastgpt` 可以先保持 `false`。
 
+## FastGPT 知识库同步
+
+项目提供了博客文章到 FastGPT 知识库的增量同步脚本：
+
+```bash
+pnpm run sync:fastgpt
+```
+
+它只处理同时满足下面条件的文章：
+
+```yaml
+published: true
+sync_fastgpt: true
+```
+
+同步逻辑：
+
+- 扫描 `src/content/posts/`；
+- 读取文章 frontmatter 和正文；
+- 计算内容 hash；
+- 新文章创建 FastGPT 文本集合；
+- 内容变化时删除旧集合并重新创建；
+- 文章删除或关闭 `sync_fastgpt` 时删除旧集合；
+- 使用 `.fastgpt-sync-state.json` 保存集合 ID 和 hash，避免重复上传。
+
+本地 dry-run 验证：
+
+```bash
+pnpm run sync:fastgpt -- --dry-run
+```
+
+真实同步前需要配置环境变量：
+
+```bash
+FASTGPT_BASE_URL='https://你的-fastgpt-地址'
+FASTGPT_API_KEY='你的-api-key'
+FASTGPT_DATASET_ID='你的知识库-id'
+FASTGPT_BLOG_BASE_URL='https://flower4night.xyz'
+```
+
+可选环境变量：
+
+```bash
+FASTGPT_PARENT_ID=
+FASTGPT_TRAINING_TYPE=chunk
+FASTGPT_CHUNK_SETTING_MODE=auto
+FASTGPT_QA_PROMPT=
+FASTGPT_STATE_FILE=/home/yim/flower-chiri/.fastgpt-sync-state.json
+```
+
+`.fastgpt-sync-state.json` 不提交到 Git。它应该保留在服务器本地，因为里面记录了文章对应的 FastGPT collection ID。
+
+部署时默认不会同步 FastGPT。确认 API 配置可用后，可以在 webhook 环境变量里加入：
+
+```bash
+FASTGPT_SYNC=1
+```
+
+这样 `scripts/deploy-blog` 会在博客构建成功后执行：
+
+```bash
+pnpm run sync:fastgpt
+```
+
+在没有配置 FastGPT API 前，不要开启 `FASTGPT_SYNC=1`。
+
 ## 一键部署
 
 当前项目提供了一键部署脚本：
@@ -137,6 +203,7 @@ pnpm run deploy:blog
 拉取 /home/yim/obsidian_notesobsidian_notes
 -> 同步 posts/ 到 src/content/posts/
 -> pnpm build
+-> 可选同步 FastGPT
 -> 可选重启静态容器
 ```
 

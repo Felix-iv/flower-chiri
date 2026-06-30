@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "new": "tsx scripts/new-post.ts",
     "deploy:blog": "bash scripts/deploy-blog",
+    "sync:fastgpt": "tsx scripts/sync-blog-to-fastgpt.ts",
     "sync:obsidian": "tsx scripts/sync-obsidian-to-blog.ts",
     "webhook:obsidian": "tsx scripts/obsidian-webhook.ts",
     "update-link-metadata": "tsx scripts/update-link-metadata.ts",
