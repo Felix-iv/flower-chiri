@@ -15,6 +15,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "new": "tsx scripts/new-post.ts",
+    "deploy:blog": "bash scripts/deploy-blog",
+    "sync:obsidian": "tsx scripts/sync-obsidian-to-blog.ts",
+    "webhook:obsidian": "tsx scripts/obsidian-webhook.ts",
     "update-link-metadata": "tsx scripts/update-link-metadata.ts",
     "update-theme": "tsx scripts/update-theme.ts"
   },

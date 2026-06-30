@@ -14,7 +14,13 @@ const posts = defineCollection({
       description: z.string().optional(),
       category: z.string().optional(),
       tags: z.array(z.string()).default([]),
-      image: z.string().optional()
+      image: z.string().optional(),
+      slug: z.string().optional(),
+      updated: z.coerce.date().optional(),
+      published: z.boolean().optional(),
+      sync_fastgpt: z.boolean().optional(),
+      source: z.string().optional(),
+      sourcePath: z.string().optional()
     })
 })
 

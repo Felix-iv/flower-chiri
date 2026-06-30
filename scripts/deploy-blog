@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BLOG_REPO_DIR="${BLOG_REPO_DIR:-/home/yim/flower-chiri}"
+NOTES_REPO_DIR="${NOTES_REPO_DIR:-/home/yim/obsidian_notesobsidian_notes}"
+OBSIDIAN_BLOG_SOURCE_DIR="${OBSIDIAN_BLOG_SOURCE_DIR:-${NOTES_REPO_DIR}/posts}"
+BLOG_BUILD_COMMAND="${BLOG_BUILD_COMMAND:-pnpm build}"
+BLOG_PULL_SELF="${BLOG_PULL_SELF:-0}"
+BLOG_RESTART_CONTAINER="${BLOG_RESTART_CONTAINER:-0}"
+BLOG_STATIC_CONTAINER="${BLOG_STATIC_CONTAINER:-flower-chiri-static}"
+LOCK_FILE="${LOCK_FILE:-/tmp/flower-chiri-deploy.lock}"
+
+log() {
+  printf '[%s] %s\n' "$(date -Is)" "$*"
+}
+
+run() {
+  log "$*"
+  "$@"
+}
+
+(
+  flock -n 9 || {
+    log "已有部署任务正在运行，跳过本次触发。"
+    exit 0
+  }
+
+  log "开始部署博客"
+
+  run git -C "$NOTES_REPO_DIR" pull --ff-only
+
+  if [[ "$BLOG_PULL_SELF" == "1" ]]; then
+    run git -C "$BLOG_REPO_DIR" pull --ff-only
+  fi
+
+  cd "$BLOG_REPO_DIR"
+
+  run env OBSIDIAN_BLOG_SOURCE_DIR="$OBSIDIAN_BLOG_SOURCE_DIR" pnpm run sync:obsidian
+
+  log "$BLOG_BUILD_COMMAND"
+  eval "$BLOG_BUILD_COMMAND"
+
+  if [[ "$BLOG_RESTART_CONTAINER" == "1" ]]; then
+    run docker restart "$BLOG_STATIC_CONTAINER"
+  else
+    log "跳过 Docker 重启。若线上页面未刷新，可设置 BLOG_RESTART_CONTAINER=1 后重试。"
+  fi
+
+  log "博客部署完成"
+) 9>"$LOCK_FILE"
