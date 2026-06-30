@@ -164,7 +164,7 @@ function toOutputFileName(filePath: string, frontmatter: Frontmatter): string {
 function convertObsidianEmbeds(body: string, warnings: string[]): string {
   const imageExtensions = /\.(avif|gif|jpe?g|png|svg|webp)$/i
   const converted = body.replace(/!\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, (match, rawTarget: string) => {
-    const target = rawTarget.trim()
+    const target = normalizeAssetPath(rawTarget)
     if (!imageExtensions.test(target)) {
       warnings.push(`保留非图片 Obsidian 嵌入：${match}`)
       return match
@@ -179,6 +179,20 @@ function convertObsidianEmbeds(body: string, warnings: string[]): string {
   }
 
   return converted
+}
+
+function normalizeAssetPath(rawTarget: string): string {
+  const target = rawTarget.trim().replaceAll('\\', '/').replace(/^\/+/, '')
+
+  if (target.startsWith('posts/_assets/')) {
+    return target.slice('posts/_assets/'.length)
+  }
+
+  if (target.startsWith('_assets/')) {
+    return target.slice('_assets/'.length)
+  }
+
+  return target
 }
 
 function buildAstroFrontmatter(sourceFile: string, source: Frontmatter): Frontmatter {
