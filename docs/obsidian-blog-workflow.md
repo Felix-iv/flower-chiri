@@ -188,6 +188,66 @@ pnpm run sync:fastgpt
 
 在没有配置 FastGPT API 前，不要开启 `FASTGPT_SYNC=1`。
 
+## FastGPT API 文件库
+
+FastGPT 控制台创建“API 文件库”时，要求填写的“接口地址”不是 FastGPT 自己的 OpenAPI 地址，而是本项目提供给 FastGPT 拉取文件的地址。
+
+本项目的 webhook 服务同时提供了 API 文件库接口，默认路径为：
+
+```text
+/fastgpt-blog-files
+```
+
+如果 Nginx Proxy Manager 已把这个路径转发到 webhook 服务，那么 FastGPT 控制台填写：
+
+```text
+baseURL: https://flower4night.xyz/fastgpt-blog-files
+authorization: FASTGPT_FILE_API_TOKEN 的值
+basePath: 留空
+```
+
+注意：
+
+- `authorization` 填的是本项目自己生成的 `FASTGPT_FILE_API_TOKEN`，不是 `FASTGPT_API_KEY`；
+- FastGPT 实际请求会带上 `Authorization: Bearer <token>`；
+- `baseURL` 只填到 `/fastgpt-blog-files`，不要追加 `/v1/file/list`；
+- API 文件库只暴露同时满足 `published: true` 和 `sync_fastgpt: true` 的文章；
+- 返回内容来自 `src/content/posts/`，也就是 Obsidian 文章同步到 Astro 后的结果。
+
+需要在 webhook 服务环境变量里配置：
+
+```bash
+FASTGPT_FILE_API_PATH=/fastgpt-blog-files
+FASTGPT_FILE_API_TOKEN='一段很长的随机字符串'
+FASTGPT_FILE_API_POSTS_DIR=/home/yim/flower-chiri/src/content/posts
+FASTGPT_BLOG_BASE_URL=https://flower4night.xyz
+```
+
+服务提供的接口符合 FastGPT API 文件库规范：
+
+```text
+POST /fastgpt-blog-files/v1/file/list
+GET  /fastgpt-blog-files/v1/file/content?id=<slug>
+GET  /fastgpt-blog-files/v1/file/read?id=<slug>
+GET  /fastgpt-blog-files/v1/file/detail?id=<slug>
+```
+
+如果继续使用 Nginx Proxy Manager，需要给 `flower4night.xyz` 增加一个 Custom Location：
+
+```text
+Location: /fastgpt-blog-files
+Forward Hostname / IP: 172.18.0.1
+Forward Port: 3210
+Scheme: http
+```
+
+“API 文件库”和前面的 `pnpm run sync:fastgpt` 是两种不同路线：
+
+- API 文件库：FastGPT 主动从 `https://flower4night.xyz/fastgpt-blog-files` 拉取文章；
+- 主动同步脚本：Linux 服务器主动调用 FastGPT OpenAPI，把文章创建为 FastGPT 文本集合。
+
+如果你在 FastGPT 控制台选择的是“API 文件库”，优先使用本节配置，不需要启用 `FASTGPT_SYNC=1`。
+
 ## 一键部署
 
 当前项目提供了一键部署脚本：
